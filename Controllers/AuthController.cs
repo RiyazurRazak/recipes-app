@@ -78,6 +78,13 @@ namespace recipes_app.Controllers
             return RedirectToAction(nameof(Register));
         }
 
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("user");
+            return RedirectToAction("Login", "Auth");
+        }
+
+
 
     }
 }
