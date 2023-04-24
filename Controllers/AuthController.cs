@@ -15,6 +15,11 @@ namespace recipes_app.Controllers
         }
         public IActionResult Register()
         {
+
+            if (Request.Cookies["user"] != null)
+            {
+                return RedirectToAction("Index", "Recipes");
+            }
             return View();
         }
 
@@ -45,6 +50,10 @@ namespace recipes_app.Controllers
 
         public IActionResult Login()
         {
+            if (Request.Cookies["user"] != null)
+            {
+                return RedirectToAction("Index", "Recipes");
+            }
             return View();
         }
 
