@@ -4,10 +4,6 @@
     ViewData["Title"] = "Edit Your Recipe";
 }
 
-<h1>Edit</h1>
-
-<h4>RecipesModel</h4>
-<hr />
 <div class="row">
     <div class="col-md-12">
         <form asp-action="Edit">
@@ -19,6 +15,7 @@
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <br />
+            <label asp-for="Content" class="control-label"></label>
             <div class="form-group visually-hidden">
                 <label asp-for="Content" class="control-label"></label>
                 <input asp-for="Content" class="form-control" id="data" />
