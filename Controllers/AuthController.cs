@@ -27,8 +27,16 @@ namespace recipes_app.Controllers
                 payload.UserId = Guid.NewGuid().ToString();
                 _context.Add(payload);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }catch(Exception ex)
+                Response.Cookies.Append("user", payload.UserId, new CookieOptions
+                {
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    HttpOnly = true
+
+                });
+                return RedirectToAction("Index", "Recipes");
+            }
+            catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
