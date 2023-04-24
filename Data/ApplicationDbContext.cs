@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using recipes_app.Models;
+
 namespace recipes_app.Data
 {
     public class ApplicationDbContext : DbContext
@@ -7,5 +9,8 @@ namespace recipes_app.Data
         {
         }
 
+        public DbSet<UsersModel> Users { get; set; }
+
+        public DbSet<RecipesModel> Recipes { get; set; }
     }
 }
