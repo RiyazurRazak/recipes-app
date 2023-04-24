@@ -29,7 +29,7 @@ namespace recipes_app.Controllers
         // GET: RecipesModels/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            Console.Write(id);
+      
             if (id == null || _context.Recipes == null)
             {
                 return NotFound();
