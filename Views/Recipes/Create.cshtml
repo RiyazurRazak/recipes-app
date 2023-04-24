@@ -46,7 +46,7 @@
     });
     const inputTag = document.getElementById("form-content")
     quill.on('text-change', function (delta, oldDelta, source) {
-        inputTag.value = quill.getText()
+        inputTag.value = JSON.stringify(quill.getContents())
     });
 
 </script>
