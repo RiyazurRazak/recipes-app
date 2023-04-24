@@ -26,10 +26,21 @@ namespace recipes_app.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+        public async Task<IActionResult> MyRecipes()
+        {
+            if (Request.Cookies["user"] == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var recipes = await _context.Recipes.Where(recipe => recipe.AuthorId == Request.Cookies["user"]).Include(r => r.Author).ToListAsync();
+            return View(recipes);
+        }
+
         // GET: RecipesModels/Details/5
         public async Task<IActionResult> Details(string id)
         {
-      
+
             if (id == null || _context.Recipes == null)
             {
                 return NotFound();
@@ -60,7 +71,7 @@ namespace recipes_app.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("RecipeId,Title,Content,AuthorId")] RecipesModel recipesModel)
         {
-            if(Request.Cookies["user"] == null)
+            if (Request.Cookies["user"] == null)
             {
                 return RedirectToAction("Login", "Auth");
             }
@@ -72,11 +83,11 @@ namespace recipes_app.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-               
+
         }
 
         // GET: RecipesModels/Edit/5
@@ -106,35 +117,34 @@ namespace recipes_app.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("RecipeId,Title,Content,CreatedDate,AuthorId")] RecipesModel recipesModel)
+        public async Task<IActionResult> Edit(string id, [Bind("RecipeId,Title,Content")] RecipesModel recipesModel)
         {
             if (id != recipesModel.RecipeId)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(recipesModel);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!RecipesModelExists(recipesModel.RecipeId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                var recipie = _context.Recipes.Find(id);
+                recipie.Title = recipesModel.Title;
+                recipie.Content = recipesModel.Content;
+                _context.Recipes.Update(recipie);
+                await _context.SaveChangesAsync();
             }
-            ViewData["AuthorId"] = new SelectList(_context.Users, "UserId", "UserId", recipesModel.AuthorId);
-            return View(recipesModel);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!RecipesModelExists(recipesModel.RecipeId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(MyRecipes));
+
         }
 
         // GET: RecipesModels/Delete/5
@@ -176,14 +186,14 @@ namespace recipes_app.Controllers
             {
                 _context.Recipes.Remove(recipesModel);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool RecipesModelExists(string id)
         {
-          return (_context.Recipes?.Any(e => e.RecipeId == id)).GetValueOrDefault();
+            return (_context.Recipes?.Any(e => e.RecipeId == id)).GetValueOrDefault();
         }
     }
 }

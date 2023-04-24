@@ -1,7 +1,7 @@
 ﻿@model recipes_app.Models.RecipesModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Your Recipe";
 }
 
 <h1>Edit</h1>
@@ -9,7 +9,7 @@
 <h4>RecipesModel</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="RecipeId" />
@@ -18,21 +18,14 @@
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <br />
+            <div class="form-group visually-hidden">
                 <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
+                <input asp-for="Content" class="form-control" id="data" />
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AuthorId" class="control-label"></label>
-                <select asp-for="AuthorId" class="form-control" asp-items="ViewBag.AuthorId"></select>
-                <span asp-validation-for="AuthorId" class="text-danger"></span>
-            </div>
+            <div id="editor" style="height: 40vh"></div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -40,9 +33,21 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script type="text/javascript">
+    var quill = new Quill('#editor', {
+        theme: 'snow'
+    });
+    window.onload = () => {
+        quill.setContents(JSON.parse(document.getElementById("data").value))
+    }
+    const inputTag = document.getElementById("data")
+    quill.on('text-change', function (delta, oldDelta, source) {
+        inputTag.value = JSON.stringify(quill.getContents())
+    });
+
+</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
