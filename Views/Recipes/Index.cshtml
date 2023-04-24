@@ -1,53 +1,31 @@
 ﻿@model IEnumerable<recipes_app.Models.RecipesModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Recipes";
 }
 
-<h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-outline-dark">Add New Recipe</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Author)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
+
+<h3>List Of Recipes Available</h3>
+<br />
+<div class="d-flex flex-wrap align-items-center justify-content-center">
 @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Content)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author.UserId)
-            </td>
-            <td>
+    <div class="card" style="width: 18rem; margin: 20px">
+        <div class="card-body">
+            <h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5>
+            <div class="card-text">@Html.DisplayFor(modelItem => item.Content)</div>
+            <p>Published At :    @Html.DisplayFor(modelItem => item.CreatedDate)</p>
+            <p>Published By:  @Html.DisplayFor(modelItem => item.Author.Name)</p>
+        </div>
+    </div>
+}
+</div>
+@*
+   <td>
                 <a asp-action="Edit" asp-route-id="@item.RecipeId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.RecipeId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.RecipeId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+            </td>*@

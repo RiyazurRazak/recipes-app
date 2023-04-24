@@ -4,12 +4,11 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h3> Add Your Recipe</h3>
+<br />
 
-<h4>RecipesModel</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
         <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group visually-hidden">
@@ -22,21 +21,35 @@
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group visually-hidden">
                 <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
+                <input asp-for="Content" class="form-control" id="form-content" />
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <br />
+            <label asp-for="Content" class="control-label"></label>
+            <br />
+            <div id="editor" style="height: 40vh"></div>
+            <br />
+            <div class="form-group" >
+                <input type="submit" value="Publish Recipie" class="btn btn-primary" />
             </div>
         </form>
+       
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script type="text/javascript">
+    var quill = new Quill('#editor', {
+        theme: 'snow'
+    });
+    const inputTag = document.getElementById("form-content")
+    quill.on('text-change', function (delta, oldDelta, source) {
+        inputTag.value = quill.getText()
+    });
+
+</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

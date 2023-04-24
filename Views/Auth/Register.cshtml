@@ -4,9 +4,9 @@
     ViewData["Title"] = "Register";
 }
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="d-flex align-items-center justify-content-center">
+    <div class="card w-50 p-3">
+        <h3>Register</h3>
         <form asp-action="Register">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -24,16 +24,19 @@
                 <input asp-for="Password" class="form-control" type="password" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
-                <input type="submit" value="Register Account" class="btn btn-primary" />
+                <input type="submit" value="Register Account" class="btn btn-dark" />
             </div>
         </form>
+        <br />
+        <div>
+            <a asp-action="Login">Already Have Account? Login</a>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Login">Already Have Account? Login</a>
-</div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
