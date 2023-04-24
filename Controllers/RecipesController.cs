@@ -86,6 +86,11 @@ namespace recipes_app.Controllers
                 return NotFound();
             }
 
+            if (Request.Cookies["user"] == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
             var recipesModel = await _context.Recipes.FindAsync(id);
             if (recipesModel == null)
             {
@@ -134,6 +139,12 @@ namespace recipes_app.Controllers
         // GET: RecipesModels/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
+
+            if (Request.Cookies["user"] == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
             if (id == null || _context.Recipes == null)
             {
                 return NotFound();
