@@ -22,17 +22,21 @@ namespace recipes_app.Controllers
         // GET: RecipesModels
         public async Task<IActionResult> Index()
         {
+            // get all recipes and populate with author field
             var applicationDbContext = _context.Recipes.Include(r => r.Author);
             return View(await applicationDbContext.ToListAsync());
         }
 
         public async Task<IActionResult> MyRecipes()
         {
+
+            // redirect to login if user not loggedin
             if (Request.Cookies["user"] == null)
             {
                 return RedirectToAction("Login", "Auth");
             }
 
+            // get the recipes created by the author who logs in
             var recipes = await _context.Recipes.Where(recipe => recipe.AuthorId == Request.Cookies["user"]).Include(r => r.Author).ToListAsync();
             return View(recipes);
         }
@@ -65,8 +69,7 @@ namespace recipes_app.Controllers
         }
 
         // POST: RecipesModels/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("RecipeId,Title,Content,AuthorId")] RecipesModel recipesModel)
@@ -113,8 +116,7 @@ namespace recipes_app.Controllers
         }
 
         // POST: RecipesModels/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("RecipeId,Title,Content")] RecipesModel recipesModel)
@@ -126,9 +128,14 @@ namespace recipes_app.Controllers
 
             try
             {
+                // find the recipe to update
                 var recipie = _context.Recipes.Find(id);
+
+                // update the specific fields
                 recipie.Title = recipesModel.Title;
                 recipie.Content = recipesModel.Content;
+
+                // update the recipe row with new values
                 _context.Recipes.Update(recipie);
                 await _context.SaveChangesAsync();
             }
@@ -161,6 +168,7 @@ namespace recipes_app.Controllers
                 return NotFound();
             }
 
+            // populate the authors 
             var recipesModel = await _context.Recipes
                 .Include(r => r.Author)
                 .FirstOrDefaultAsync(m => m.RecipeId == id);

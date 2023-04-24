@@ -16,6 +16,7 @@ namespace recipes_app.Controllers
         public IActionResult Register()
         {
 
+            // redirect to login page if cookie not present
             if (Request.Cookies["user"] != null)
             {
                 return RedirectToAction("Index", "Recipes");
@@ -29,9 +30,14 @@ namespace recipes_app.Controllers
         {
             try
             {
+                // generate new unique id to the user
                 payload.UserId = Guid.NewGuid().ToString();
+
+                // create user in db
                 _context.Add(payload);
                 await _context.SaveChangesAsync();
+
+                // add cookie with secure option to access with server only
                 Response.Cookies.Append("user", payload.UserId, new CookieOptions
                 {
                     Secure = true,
@@ -64,7 +70,7 @@ namespace recipes_app.Controllers
             var validUser = _context.Users.Where(user => user.Password == userModel.Password && user.Email == userModel.Email).FirstOrDefault();
             if (validUser != null)
             {
-                // add the user id to the cookies
+                // add cookie with secure option to access with server only
                 Response.Cookies.Append("user", validUser.UserId, new CookieOptions
                 {
                     Secure = true,
@@ -80,6 +86,7 @@ namespace recipes_app.Controllers
 
         public IActionResult Logout()
         {
+            // remove cookie
             Response.Cookies.Delete("user");
             return RedirectToAction("Login", "Auth");
         }
