@@ -22,14 +22,17 @@ namespace recipes_app.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register([Bind("Email,Password,Name")] UsersModel payload)
         {
-            if (ModelState.IsValid)
+            try
             {
                 payload.UserId = Guid.NewGuid().ToString();
                 _context.Add(payload);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
-            return BadRequest(ModelState);
+            
         }
 
         public IActionResult Login()
